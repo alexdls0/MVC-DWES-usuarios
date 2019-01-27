@@ -16,7 +16,8 @@ class Router {
             'admin' => new Route('AdminModel', 'AdminView', 'AdminController'),
             'editadmin' => new Route('EditAdminModel', 'EditAdminView', 'EditAdminController'),
             'users' => new Route('UsersModel', 'UsersView', 'UsersController'),
-            'edituserfromadmin' => new Route('EditUFAModel', 'EditUFAView', 'EditUFAController')
+            'edituserfromadmin' => new Route('EditUFAModel', 'EditUFAView', 'EditUFAController'),
+            'paginacion' => new Route('PaginacionModel', 'PaginacionView', 'PaginacionController')
         );
         $this->ruta = $ruta;
     }

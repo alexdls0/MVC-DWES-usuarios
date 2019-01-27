@@ -18,6 +18,7 @@ class IndexController extends Controller {
             //metodo en el modelo al que le paso clave y correo y devuelve true o false para saber si existe
             $r = $this->getModel()->existeUsuario($_SESSION['password'], $_SESSION['email']);
             if($r==false){
+                session_start();
                 unset($_SESSION['email']);
                 unset($_SESSION['password']);
                 unset($_SESSION['name']);
