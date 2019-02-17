@@ -18,7 +18,6 @@ class IndexController extends Controller {
             //metodo en el modelo al que le paso clave y correo y devuelve true o false para saber si existe
             $r = $this->getModel()->existeUsuario($_SESSION['password'], $_SESSION['email']);
             if($r==false){
-                session_start();
                 unset($_SESSION['email']);
                 unset($_SESSION['password']);
                 unset($_SESSION['name']);
@@ -39,12 +38,19 @@ class IndexController extends Controller {
         if(isset($_POST['email']) && isset($_POST['clave'])){
             $r = $this->getModel()->coincide($_POST['clave'], $_POST['email']);
             if($r){
-                $this->getModel()->obtenerLogeo($_POST['clave'], $_POST['email']);
+                echo'1';
+                if($this->getModel()->esActivo($_POST['clave'], $_POST['email'])){
+                    echo'2';
+                    $_SESSION['email'] = $_POST['email'];
+                    $_SESSION['password'] = $this->getModel()->obtenerClave($_POST['clave'], $_POST['email']);
+                    echo'hola';var_export($_SESSION);
+                }
             }else{
                 unset($_POST['email']);
                 unset($_POST['clave']);
             }
         }
+        
         header('Location: ' . App::BASE . 'index');
         exit();
     }

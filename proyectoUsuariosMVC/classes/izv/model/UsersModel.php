@@ -8,12 +8,13 @@ use izv\data\Usuario;
 use izv\managedata\ManageUsuario;
 use izv\app\App;
 use izv\tools\Reader;
-use izv\tools\Session;
 use izv\tools\Mail;
 
 
 
 class UsersModel extends Model {
+    
+    private $correo = null; 
     
     function existeAdmin($clave, $email){
         $db = new Database();
@@ -23,6 +24,7 @@ class UsersModel extends Model {
 
         for($i = 0 ; $i < count($usuarios) ; $i++){
             if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave() && $usuarios[$i]->getAdmin()>0){
+                $this->correo = $email;
                 return true;
             }        
         }
@@ -42,7 +44,7 @@ class UsersModel extends Model {
         $db->close();
         
         for($i = 0 ; $i < count($usuarios) ; $i++){
-            if($_SESSION['email'] != $usuarios[$i]->getCorreo()){
+            if($this->correo != $usuarios[$i]->getCorreo()){
                 $alias = '-----';
                 if(!is_null($usuarios[$i]->getAlias())){
                         $alias = $usuarios[$i]->getAlias();

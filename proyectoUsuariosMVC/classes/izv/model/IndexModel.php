@@ -8,7 +8,6 @@ use izv\data\Usuario;
 use izv\managedata\ManageUsuario;
 use izv\app\App;
 use izv\tools\Reader;
-use izv\tools\Session;
 
 class IndexModel extends Model {
     
@@ -58,12 +57,11 @@ class IndexModel extends Model {
                 }
             }        
         }
-        
         return false;
     }
     
-    //función para obtener un usuario de la base de datos
-    function obtenerLogeo($clave, $email){
+    //funcion para comprobar si el usuario con esa clave y correo esta activo o no
+    function esActivo($clave, $email){
         $db = new Database();
         $manager = new ManageUsuario($db);
         $usuarios = $manager->getAll();
@@ -71,13 +69,29 @@ class IndexModel extends Model {
         
         for($i = 0 ; $i < count($usuarios) ; $i++){
             if($email == $usuarios[$i]->getCorreo() && Util::verificarClave($clave,$usuarios[$i]->getClave())){
-                $_SESSION['email'] = $usuarios[$i]->getCorreo();
-                $_SESSION['password'] = $usuarios[$i]->getClave();
-                return true;
+                if($usuarios[$i]->getActivo() != 0){
+                    return true;
+                }
+            }        
+        }
+        return false;
+    }
+    
+    //función para obtener un usuario de la base de datos
+    function obtenerClave($clave, $email){
+        $db = new Database();
+        $manager = new ManageUsuario($db);
+        $usuarios = $manager->getAll();
+        $db->close();
+        
+        for($i = 0 ; $i < count($usuarios) ; $i++){
+            if($email == $usuarios[$i]->getCorreo() && Util::verificarClave($clave,$usuarios[$i]->getClave())
+            && $usuarios[$i]->getActivo() !=0){
+                return $usuarios[$i]->getClave();
             }        
         }
         
-        return false;
+        return null;
     }
     
     //funcion para activar un usuario

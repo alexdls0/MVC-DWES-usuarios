@@ -8,12 +8,14 @@ use izv\data\Usuario;
 use izv\managedata\ManageUsuario;
 use izv\app\App;
 use izv\tools\Reader;
-use izv\tools\Session;
 use izv\tools\Mail;
 
 
 
 class UserModel extends Model {
+    
+    private $correo=null;
+    private $clave=null;
     
     //función para comprobar que existe una coincidencia de usuario con la base de datos
     function existeUsuario($clave, $email){
@@ -23,7 +25,10 @@ class UserModel extends Model {
         $db->close();
 
         for($i = 0 ; $i < count($usuarios) ; $i++){
-            if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave()){
+            if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave()
+            && $usuarios[$i]->getAdmin() == 0 && $usuarios[$i]->getActivo() != 0){
+                $this->correo = $email;
+                $this->clave = $clave;
                 return true;
             }        
         }
@@ -44,7 +49,7 @@ class UserModel extends Model {
         
         for($i = 0 ; $i < count($usuarios) ; $i++){
             
-            if($_SESSION['email'] == $usuarios[$i]->getCorreo() && $_SESSION['password'] ==$usuarios[$i]->getClave()){
+            if($this->correo == $usuarios[$i]->getCorreo() && $this->clave ==$usuarios[$i]->getClave()){
 
                 $activo = 'Si';
                 if($usuarios[$i]->getActivo() == 0){
@@ -71,7 +76,7 @@ class UserModel extends Model {
         if($db->connect()) {
             $conexion = $db->getConnection();
             $sentencia = $conexion->prepare($sql);
-            $sentencia->bindValue('correo', $_SESSION['email']);
+            $sentencia->bindValue('correo', $this->correo);
             if($sentencia->execute()) {
                 $resultado = $sentencia->rowCount();
             }
@@ -86,7 +91,7 @@ class UserModel extends Model {
         $user = null;
 
         for($i = 0 ; $i < count($usuarios); $i++){
-            if($usuarios[$i]->getCorreo() == $_SESSION['email']){
+            if($usuarios[$i]->getCorreo() == $this->correo){
                 $user = $usuarios[$i];
             }
         }
@@ -106,10 +111,6 @@ class UserModel extends Model {
         $manager = new ManageUsuario($db);
         $resultado = 0;
         
-        //Si sigue viva la sesion procedo a borrar
-        session_start();
-        if(isset($_SESSION['email']) && isset($_SESSION['password'])){
-            $resultado = $manager->removeEmail($_SESSION['email']);    
-        }
+        $resultado = $manager->removeEmail($correo);    
     }
 }

@@ -8,7 +8,6 @@ use izv\data\Usuario;
 use izv\database\Database;
 use izv\managedata\ManageUsuario;
 use izv\tools\Reader;
-use izv\tools\Session;
 use izv\mvc\FrontController;
 
 class UsersView extends View {
