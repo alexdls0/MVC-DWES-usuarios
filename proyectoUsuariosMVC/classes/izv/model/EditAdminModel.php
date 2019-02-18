@@ -10,6 +10,9 @@ use izv\tools\Util;
 
 class EditAdminModel extends Model {
     
+    private $correo = null;
+    private $clave = null;
+    
     //función para comprobar que existe una coincidencia de usuario con la base de datos
     function existeAdmin($clave, $email){
         $db = new Database();
@@ -18,7 +21,10 @@ class EditAdminModel extends Model {
         $db->close();
 
         for($i = 0 ; $i < count($usuarios) ; $i++){
-            if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave()){
+            if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave()
+            && $usuarios[$i]->getAdmin() != 0 && $usuarios[$i]->getActivo() != 0){
+                $this->correo = $email;
+                $this->clave = $clave;
                 return true;
             }        
         }
@@ -39,7 +45,7 @@ class EditAdminModel extends Model {
         
         for($i = 0 ; $i < count($usuarios) ; $i++){
             
-            if($_SESSION['email'] == $usuarios[$i]->getCorreo() && $_SESSION['password'] ==$usuarios[$i]->getClave()){
+            if($this->correo == $usuarios[$i]->getCorreo() && $this->clave ==$usuarios[$i]->getClave()){
 
                 $activo = 'Si';
                 if($usuarios[$i]->getActivo() == 0){

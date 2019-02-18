@@ -10,6 +10,28 @@ use izv\tools\Util;
 
 class EditUserModel extends Model {
     
+    private $correo = null;
+    private $clave = null;
+    
+    //funcion para obtener el correo y el email del usuario que modificamos
+    function existeUsuario($clave, $email){
+        $db = new Database();
+        $manager = new ManageUsuario($db);
+        $usuarios = $manager->getAll();
+        $db->close();
+
+        for($i = 0 ; $i < count($usuarios) ; $i++){
+            if($email == $usuarios[$i]->getCorreo() && $clave ==$usuarios[$i]->getClave()
+            && $usuarios[$i]->getAdmin() == 0 && $usuarios[$i]->getActivo() != 0){
+                $this->correo = $email;
+                $this->clave = $clave;
+                return true;
+            }        
+        }
+        
+        return false;
+    }
+    
     //funcion para obtener los datos que debe manejar twig
     function getViewData(){
         $data['twigFolder'] = 'twigtemplates/twig';
@@ -23,7 +45,7 @@ class EditUserModel extends Model {
         
         for($i = 0 ; $i < count($usuarios) ; $i++){
             
-            if($_SESSION['email'] == $usuarios[$i]->getCorreo() && $_SESSION['password'] ==$usuarios[$i]->getClave()){
+            if($this->correo == $usuarios[$i]->getCorreo() && $this->clave ==$usuarios[$i]->getClave()){
 
                 $activo = 'Si';
                 if($usuarios[$i]->getActivo() == 0){

@@ -20,6 +20,15 @@ class EditUserController extends Controller {
             header('Location: ' . App::BASE . 'index');
             exit();
         }
+        $r = $this->getModel()->existeUsuario($_SESSION['password'], $_SESSION['email']);
+        if($r==false){
+            session_start();
+            unset($_SESSION['email']);
+            unset($_SESSION['password']);
+            unset($_SESSION['name']);
+            header('Location: ' . App::BASE . 'index');
+            exit();
+        }
     }
     
     function doedit(){

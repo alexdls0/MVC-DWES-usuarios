@@ -8,9 +8,7 @@ use izv\data\Usuario;
 use izv\managedata\ManageUsuario;
 use izv\app\App;
 use izv\tools\Reader;
-use izv\tools\Session;
 use izv\tools\Mail;
-
 
 
 class AdminModel extends Model {
