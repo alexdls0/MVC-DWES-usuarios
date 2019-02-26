@@ -13,7 +13,7 @@ use izv\tools\Pagination;
 class PaginacionModel extends Model {
     
     function getPaginacion($pagina = 1, $orden = 'id', $filtro = null) {
-        $total = $this->getTotalPaginacion();
+        $total = $this->getTotalPaginacion($filtro);
         $paginacion = new Pagination($total, $pagina);
         $offset = $paginacion->offset();
         $rpp = $paginacion->rpp();
@@ -42,6 +42,7 @@ class PaginacionModel extends Model {
         
         $enlaces = $paginacion->values();
         return array(
+            'pagina' => $pagina,
             'paginas' => $enlaces,
             'usuarios' => $array,
             'rango' => $paginacion->range(5),
@@ -50,39 +51,26 @@ class PaginacionModel extends Model {
         );
     }
 
-    function getTotalPaginacion() {
+    function getTotalPaginacion($filtro = null) {
         $usuarios = 0;
+        $parametros = array();
         if($this->getDatabase()->connect()) {
-            $sql = 'select count(*) from usuario';
-            if($this->getDatabase()->execute($sql)) {
+            if ($filtro == null) {
+                $sql = 'select count(*) from usuario';
+            } else {
+                $sql = 'select count(*) from usuario
+                        where id like :filtro or nombre like :filtro or correo like :filtro 
+                        or alias like :filtro or fechaalta like :filtro';
+                $parametros['filtro'] = '%' . $filtro . '%';
+            }
+            if($this->getDatabase()->execute($sql, $parametros)) {
                 if($fila = $this->getDatabase()->getSentence()->fetch()) {
                     $usuarios = $fila[0];
                 }
             }
         }
+        $this->__destruct();
         return $usuarios;
     }
-    
-    //funcion para obtener los datos que debe manejar twig
-    /*function getViewData(){
-        $data['twigFolder'] = 'twigtemplates/maundy';
-        $data['twigFile'] = '_paginacion.html';
-        $data['titulo'] = 'Lista de usuarios paginados';
-        
-        $db = new Database();
-        $manager = new ManageUsuario($db);
-        $usuarios = $manager->getAll();
-        $db->close();
-        
-        for($i = 0 ; $i < count($usuarios) ; $i++){
-            $alias = '-----';
-            if(!is_null($usuarios[$i]->getAlias())){
-                    $alias = $usuarios[$i]->getAlias();
-            }
-            $item = array('nombre' => $usuarios[$i]->getNombre(), 'correo' => $usuarios[$i]->getCorreo(), 'alias' => $alias );
-            $data['lista'][]= $item;
-        }
-        
-        return $data;
-    }*/
+   
 }

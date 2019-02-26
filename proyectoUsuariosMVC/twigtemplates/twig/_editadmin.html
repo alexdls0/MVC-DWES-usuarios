@@ -11,13 +11,13 @@
 	<h1 class="centrar" style="width:100%; text-align:center; margin-top: 50px">{{ titulo }}</h1>
 	<form style="width: 100%; text-align: center; margin-top: 50px; margin-bottom: 100px;" action="editadmin/doedit" method="post">
 		<p>Nombre</p>
-		<input type="text" name="nombre"/>
+		<input type="text" name="nombre" value="{{user.nombre}}"/>
 		<p>Alias</p>
-		<input type="text" name="alias"/>
+		<input type="text" name="alias" value="{{user.alias}}"/>
 		<input type="checkbox" name="vaciaralias" value="vaciar"> Eliminar alias<br><br>
 		<input type="checkbox" name="noadmin" value="relevar"> Dejar de ser admin<br><br>
 		<p>Email</p>
-		<input type="email" name="email"/>
+		<input type="email" name="email" value="{{user.correo}}"/>
 		<p>Original password</p>
 		<input type="password" name="clave"/>
 		<p>New password</p>

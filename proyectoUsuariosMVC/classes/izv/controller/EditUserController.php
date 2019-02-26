@@ -33,7 +33,7 @@ class EditUserController extends Controller {
     
     function doedit(){
         $nombrechecked = null;
-        if($_POST['nombre'] !=null){
+        if(isset($_POST['nombre']) && $_POST['nombre'] !=null){
             if(strlen($_POST['nombre']) <= 50 && ctype_alpha($_POST['nombre'])){
                 $nombrechecked = $_POST['nombre'];
             }
@@ -44,7 +44,7 @@ class EditUserController extends Controller {
         }
         
         $aliaschecked = null;
-        if($_POST['alias'] != null){
+        if(isset($_POST['alias']) && $_POST['alias'] != null){
             if(strlen($_POST['alias']) <= 30 && !strpos($_POST['alias'], ' ')){
                 $aliaschecked = $_POST['alias'];
             }
@@ -54,21 +54,23 @@ class EditUserController extends Controller {
             $this->getModel()->cambiarAlias($_SESSION['password'], $_SESSION['email'], $aliaschecked);
         }
         
-        if($_POST['vaciaralias'] != null){
+        if(isset($_POST['vaciaralias']) && $_POST['vaciaralias'] != null){
             $this->getModel()->vaciarAlias($_SESSION['password'], $_SESSION['email']);
         }
         
         $clavevieja = $_SESSION['password'];
         $clavechecked = null;
-        if($_POST['clave'] !=null && $_POST['claveRep'] !=null && $_POST['claveRep2'] !=null){
-            if(Util::verificarClave($_POST['clave'], $_SESSION['password'])){
-                if($_POST['claveRep'] === $_POST['claveRep2']){
-                    if(strlen($_POST['claveRep']) > 8 && strlen($_POST['claveRep']) < 40 && !ctype_digit($_POST['claveRep']) 
-                    && !ctype_alpha($_POST['claveRep']) && !strpos($_POST['claveRep'], ' ')){
-                        $clavechecked = $_POST['claveRep'];
-                        $clavevieja = Util::encriptar($clavechecked);
-                    }
-                }    
+        if(isset($_POST['clave']) && isset($_POST['claveRep']) && isset($_POST['claveRep2'])){
+            if($_POST['clave'] !=null && $_POST['claveRep'] !=null && $_POST['claveRep2'] !=null){
+                if(Util::verificarClave($_POST['clave'], $_SESSION['password'])){
+                    if($_POST['claveRep'] === $_POST['claveRep2']){
+                        if(strlen($_POST['claveRep']) > 8 && strlen($_POST['claveRep']) < 40 && !ctype_digit($_POST['claveRep']) 
+                        && !ctype_alpha($_POST['claveRep']) && !strpos($_POST['claveRep'], ' ')){
+                            $clavechecked = $_POST['claveRep'];
+                            $clavevieja = Util::encriptar($clavechecked);
+                        }
+                    }    
+                }
             }
         }
         
@@ -76,7 +78,7 @@ class EditUserController extends Controller {
             $this->getModel()->cambiarClave($_SESSION['password'], $_SESSION['email'], $clavevieja);
         }
         
-        if($_POST['email'] != null){
+        if(isset($_POST['email']) && $_POST['email'] != null){
             $this->getModel()->cambiarCorreo($clavevieja, $_SESSION['email'], $_POST['email']);   
         }
         

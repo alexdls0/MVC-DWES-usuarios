@@ -15,16 +15,16 @@
     <table class="table">
         <tr>
             <th scope="col">
-                <a href="paginacion?orden=id">id</a>
+                <a href="paginacion?orden=id&filtro={{filtro}}&pagina={{pagina}}">id</a>
             </th>
             <th scope="col">
-                <a href="paginacion?orden=correo">correo</a>
+                <a href="paginacion?orden=correo&filtro={{filtro}}&pagina={{pagina}}">correo</a>
             </th>
             <th scope="col">
-                <a href="paginacion?orden=alias">alias</a>
+                <a href="paginacion?orden=alias&filtro={{filtro}}&pagina={{pagina}}">alias</a>
             </th>
             <th scope="col">
-                <a href="paginacion?orden=nombre">nombre</a>
+                <a href="paginacion?orden=nombre&filtro={{filtro}}&pagina={{pagina}}">nombre</a>
             </th>
         </tr>
         {% for usuario in usuarios %}
@@ -55,16 +55,16 @@
         
         {% if filtro == false %}
         <div class='col-md-3'>
-            <a href="paginacion?pagina={{paginas.primero}}&orden={{orden}}" class="btn contact-submit" role="button">Primero</a>
+            <a href="paginacion?pagina={{paginas.primero}}&orden={{orden}}&filtro={{filtro}}" class="btn contact-submit" role="button">Primero</a>
         </div>
         <div class='col-md-3'>
-            <a href="paginacion?pagina={{paginas.anterior}}&orden={{orden}}" class="btn contact-submit" role="button">Anterior</a>
+            <a href="paginacion?pagina={{paginas.anterior}}&orden={{orden}}&filtro={{filtro}}" class="btn contact-submit" role="button">Anterior</a>
         </div>
         <div class='col-md-3'>
-            <a href="paginacion?pagina={{paginas.siguiente}}&orden={{orden}}" class="btn contact-submit" role="button">Siguiente</a>
+            <a href="paginacion?pagina={{paginas.siguiente}}&orden={{orden}}&filtro={{filtro}}" class="btn contact-submit" role="button">Siguiente</a>
         </div>
         <div class='col-md-3'>
-            <a href="paginacion?pagina={{paginas.ultimo}}&orden={{orden}}" class="btn contact-submit" role="button">Último</a>
+            <a href="paginacion?pagina={{paginas.ultimo}}&orden={{orden}}&filtro={{filtro}}" class="btn contact-submit" role="button">Último</a>
         </div>
         {% endif %}
     </div>
@@ -79,7 +79,7 @@
         {% if filtro == false %}
         {% for pagina in rango %}
             <div class='col-md-1'>
-                <a href="paginacion?pagina={{pagina}}&orden={{orden}}" class="btn contact-submit" role="button">{{pagina}}</a>
+                <a href="paginacion?pagina={{pagina}}&orden={{orden}}&filtro={{filtro}}" class="btn contact-submit" role="button">{{pagina}}</a>
             </div>
         {% endfor %}
         {% endif %}

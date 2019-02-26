@@ -48,6 +48,30 @@ class EditUFAModel extends Model {
         $data['twigFolder'] = 'twigtemplates/twig';
         $data['twigFile'] = '_edituserfromadmin.html';
         $data['titulo'] = 'Editar a usuario '.$this->nombreUsuarioAEditar.' desde perfil administrador';
+        
+        $db = new Database();
+        $manager = new ManageUsuario($db);
+        $usuarios = $manager->getAll();
+        $db->close();
+        
+        for($i = 0 ; $i < count($usuarios) ; $i++){
+            
+            if($this->id == $usuarios[$i]->getId()){
+
+                $activo = 'Si';
+                if($usuarios[$i]->getActivo() == 0){
+                    $activo = 'No';
+                }
+                $alias = '-----';
+                if(!is_null($usuarios[$i]->getAlias())){
+                        $alias = $usuarios[$i]->getAlias();
+                }
+                $data['user'] = array('nombre' => $usuarios[$i]->getNombre(), 'correo' => $usuarios[$i]->getCorreo(), 
+                'alias' => $alias, 'activo' => $activo, 'admin' =>$usuarios[$i]->getAdmin() );
+                $i = count($usuarios);
+            }
+        }
+        
         return $data;
     }
     
